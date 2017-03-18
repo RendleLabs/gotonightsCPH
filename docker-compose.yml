@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+
+  bobbins:
+    image: test/goto-nights-cph
+    build:
+      context: ./bobbins
+    networks:
+      infra:
+    ports:
+      - "5000:5000"
+    depends_on:
+      - 'influxdb'
+      - 'elasticsearch'
+
+  influxdb:
+    image: influxdb
+    networks:
+      infra:
+
+  grafana:
+    image: grafana/grafana
+    networks:
+      infra:
+    ports:
+      - "3000:3000"
+
+  elasticsearch:
+    image: elasticsearch
+    networks:
+      infra:
+
+  kibana:
+    image: kibana
+    networks:
+      infra:
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+
+
+networks:
+  infra:
+    driver: bridge
